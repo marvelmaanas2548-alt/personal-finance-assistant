@@ -191,20 +191,32 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Check backend server on load if reachable
   useEffect(() => {
+    if (!token) {
+      setIncomes([]);
+      setExpenses([]);
+      setBudgets([]);
+      setGoals([]);
+      setInvestments([]);
+      setLoans([]);
+      setBills([]);
+      setNotifications([]);
+      return;
+    }
+
     fetch(`${API_BASE_URL}/all-data`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data) {
-          if (data.incomes?.length) setIncomes(data.incomes);
-          if (data.expenses?.length) setExpenses(data.expenses);
-          if (data.budgets?.length) setBudgets(data.budgets);
-          if (data.goals?.length) setGoals(data.goals);
-          if (data.investments?.length) setInvestments(data.investments);
-          if (data.loans?.length) setLoans(data.loans);
-          if (data.bills?.length) setBills(data.bills);
-          if (data.notifications?.length) setNotifications(data.notifications);
+          setIncomes(Array.isArray(data.incomes) ? data.incomes : []);
+          setExpenses(Array.isArray(data.expenses) ? data.expenses : []);
+          setBudgets(Array.isArray(data.budgets) ? data.budgets : []);
+          setGoals(Array.isArray(data.goals) ? data.goals : []);
+          setInvestments(Array.isArray(data.investments) ? data.investments : []);
+          setLoans(Array.isArray(data.loans) ? data.loans : []);
+          setBills(Array.isArray(data.bills) ? data.bills : []);
+          setNotifications(Array.isArray(data.notifications) ? data.notifications : []);
         }
       })
       .catch(() => {

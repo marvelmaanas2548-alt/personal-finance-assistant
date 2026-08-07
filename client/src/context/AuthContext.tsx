@@ -27,6 +27,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [user]);
 
+  useEffect(() => {
+    if (token) {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      fetch(`${baseUrl}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.user) {
+            setUser(data.user);
+            localStorage.setItem('user_profile', JSON.stringify(data.user));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [token]);
+
   const login = (newToken: string, newUser: UserProfile) => {
     setToken(newToken);
     setUser(newUser);
