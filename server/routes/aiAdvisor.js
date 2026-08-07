@@ -15,11 +15,11 @@ router.get('/insights', authenticateToken, (req, res) => {
   const db = getDb();
   const userId = req.user.id;
   
-  const incomes = db.incomes.filter(i => i.userId === userId || i.userId === 'u_101');
-  const expenses = db.expenses.filter(e => e.userId === userId || e.userId === 'u_101');
-  const budgets = db.budgets.filter(b => b.userId === userId || b.userId === 'u_101');
-  const goals = db.goals.filter(g => g.userId === userId || g.userId === 'u_101');
-  const investments = db.investments.filter(inv => inv.userId === userId || inv.userId === 'u_101');
+  const incomes = db.incomes.filter(i => i.userId === userId);
+  const expenses = db.expenses.filter(e => e.userId === userId);
+  const budgets = db.budgets.filter(b => b.userId === userId);
+  const goals = db.goals.filter(g => g.userId === userId);
+  const investments = db.investments.filter(inv => inv.userId === userId);
 
   const totalIncome = incomes.reduce((sum, i) => sum + Number(i.amount), 0);
   const totalExpense = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
@@ -87,8 +87,8 @@ router.post('/chat', authenticateToken, (req, res) => {
   const userId = req.user.id;
   const user = db.users.find(u => u.id === userId) || db.users[0];
 
-  const incomes = db.incomes.filter(i => i.userId === userId || i.userId === 'u_101');
-  const expenses = db.expenses.filter(e => e.userId === userId || e.userId === 'u_101');
+  const incomes = db.incomes.filter(i => i.userId === userId);
+  const expenses = db.expenses.filter(e => e.userId === userId);
   const totalIncome = incomes.reduce((sum, i) => sum + Number(i.amount), 0);
   const totalExpense = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
   const savings = totalIncome - totalExpense;

@@ -37,14 +37,14 @@ router.get('/all-data', authenticateToken, (req, res) => {
   const userId = req.user.id;
 
   const user = db.users.find(u => u.id === userId) || db.users[0];
-  const incomes = db.incomes.filter(i => i.userId === userId || i.userId === 'u_101');
-  const expenses = db.expenses.filter(e => e.userId === userId || e.userId === 'u_101');
-  const budgets = db.budgets.filter(b => b.userId === userId || b.userId === 'u_101');
-  const goals = db.goals.filter(g => g.userId === userId || g.userId === 'u_101');
-  const investments = db.investments.filter(inv => inv.userId === userId || inv.userId === 'u_101');
-  const loans = db.loans.filter(l => l.userId === userId || l.userId === 'u_101');
-  const bills = db.bills.filter(b => b.userId === userId || b.userId === 'u_101');
-  const notifications = db.notifications.filter(n => n.userId === userId || n.userId === 'u_101');
+  const incomes = db.incomes.filter(i => i.userId === userId);
+  const expenses = db.expenses.filter(e => e.userId === userId);
+  const budgets = db.budgets.filter(b => b.userId === userId);
+  const goals = db.goals.filter(g => g.userId === userId);
+  const investments = db.investments.filter(inv => inv.userId === userId);
+  const loans = db.loans.filter(l => l.userId === userId);
+  const bills = db.bills.filter(b => b.userId === userId);
+  const notifications = db.notifications.filter(n => n.userId === userId);
 
   // Compute live budget spentAmounts
   const updatedBudgets = budgets.map(bgt => {
