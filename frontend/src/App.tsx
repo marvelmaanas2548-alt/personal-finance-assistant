@@ -25,6 +25,7 @@ import { AiAdvisorPage } from './pages/AiAdvisorPage';
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [activeView, setActiveView] = useState<PageView>('dashboard');
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // Modal States
   const [isIncomeModalOpen, setIsIncomeModalOpen] = useState(false);
@@ -82,17 +83,23 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 antialiased selection:bg-indigo-500 selection:text-white transition-colors duration-300">
-      {/* Sidebar */}
-      <Sidebar activeView={activeView} setActiveView={setActiveView} />
+      {/* Sidebar with Mobile Drawer */}
+      <Sidebar
+        activeView={activeView}
+        setActiveView={setActiveView}
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+      />
 
       {/* Main Layout Container */}
       <div className="flex-1 flex flex-col min-w-0">
         <Navbar
           onOpenProfile={() => setActiveView('profile')}
           onOpenAi={() => setActiveView('ai')}
+          onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
         />
 
-        <main className="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto overflow-x-hidden">
           {renderActiveView()}
         </main>
       </div>
