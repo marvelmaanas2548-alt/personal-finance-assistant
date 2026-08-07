@@ -1,6 +1,10 @@
 node_modules/
 .env
+*.env
 dist/
 build/
 logs/
 *.log
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

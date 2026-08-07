@@ -1,25 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
+const { getDb } = require('../db');
 const { authenticateToken } = require('../middleware/auth');
 
-const dbPath = path.join(__dirname, '../data/db.json');
-
-function getDb() {
-  return JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-}
-
 // Generate personalized spending insights
-router.get('/insights', authenticateToken, (req, res) => {
+router.get('/insights', authenticateToken, async (req, res) => {
   const db = getDb();
   const userId = req.user.id;
-  
-  const incomes = db.incomes.filter(i => i.userId === userId);
-  const expenses = db.expenses.filter(e => e.userId === userId);
-  const budgets = db.budgets.filter(b => b.userId === userId);
-  const goals = db.goals.filter(g => g.userId === userId);
-  const investments = db.investments.filter(inv => inv.userId === userId);
+
+  const incomes = await db.all('SELECT * FROM incomes WHERE userId = ?', [userId]);
+  const expenses = await db.all('SELECT * FROM expenses WHERE userId = ?', [userId]);
+  const budgets = await db.all('SELECT * FROM budgets WHERE userId = ?', [userId]);
+  const goals = await db.all('SELECT * FROM goals WHERE userId = ?', [userId]);
+  const investments = await db.all('SELECT * FROM investments WHERE userId = ?', [userId]);
 
   const totalIncome = incomes.reduce((sum, i) => sum + Number(i.amount), 0);
   const totalExpense = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
@@ -51,8 +44,8 @@ router.get('/insights', authenticateToken, (req, res) => {
       title: 'Savings Optimization',
       type: savingsRate >= 30 ? 'success' : 'info',
       description: `Your current savings rate is ${savingsRate}%. Total monthly savings: ₹${savings.toLocaleString()}.`,
-      recommendation: savingsRate >= 30 
-        ? 'Great job maintaining over 30% savings rate! Consider allocating ₹15,000 to Index Funds or Gold SGB.' 
+      recommendation: savingsRate >= 30
+        ? 'Great job maintaining over 30% savings rate! Consider allocating ₹15,000 to Index Funds or Gold SGB.'
         : 'Aim for a 30% minimum savings rate by trimming non-essential shopping and entertainment.'
     },
     {
@@ -81,17 +74,21 @@ router.get('/insights', authenticateToken, (req, res) => {
 });
 
 // Interactive AI Financial Advisor Chat
-router.post('/chat', authenticateToken, (req, res) => {
+router.post('/chat', authenticateToken, async (req, res) => {
   const { message } = req.body;
   const db = getDb();
   const userId = req.user.id;
-  const user = db.users.find(u => u.id === userId) || db.users[0];
+  const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
 
-  const incomes = db.incomes.filter(i => i.userId === userId);
-  const expenses = db.expenses.filter(e => e.userId === userId);
+  const incomes = await db.all('SELECT * FROM incomes WHERE userId = ?', [userId]);
+  const expenses = await db.all('SELECT * FROM expenses WHERE userId = ?', [userId]);
   const totalIncome = incomes.reduce((sum, i) => sum + Number(i.amount), 0);
   const totalExpense = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
   const savings = totalIncome - totalExpense;
+
+  const userName = user?.name || 'User';
+  const riskAppetite = user?.riskAppetite || 'Moderate';
+  const salary = user?.salary || 100000;
 
   const textLower = (message || '').toLowerCase();
   let aiResponse = '';
@@ -103,15 +100,15 @@ router.post('/chat', authenticateToken, (req, res) => {
   ];
 
   if (textLower.includes('save') || textLower.includes('savings')) {
-    aiResponse = `Hello ${user.name}! Based on your current profile, your monthly income is ₹${totalIncome.toLocaleString()} and expenses are ₹${totalExpense.toLocaleString()}, yielding ₹${savings.toLocaleString()} in net savings (${((savings/totalIncome)*100).toFixed(1)}% savings rate).\n\n💡 **Top AI Tip**: Increase your monthly SIP contributions by ₹5,000 right after salary credit (Pay Yourself First rule).`;
+    aiResponse = `Hello ${userName}! Based on your current profile, your monthly income is ₹${totalIncome.toLocaleString()} and expenses are ₹${totalExpense.toLocaleString()}, yielding ₹${savings.toLocaleString()} in net savings (${totalIncome > 0 ? ((savings/totalIncome)*100).toFixed(1) : 0}% savings rate).\n\n💡 **Top AI Tip**: Increase your monthly SIP contributions by ₹5,000 right after salary credit (Pay Yourself First rule).`;
   } else if (textLower.includes('invest') || textLower.includes('fund') || textLower.includes('stock')) {
-    aiResponse = `Given your **${user.riskAppetite}** risk profile and ₹${user.salary.toLocaleString()} base income:\n\n1. **Equity Mutual Funds / Index Funds**: 50% allocation for long-term compound growth.\n2. **Fixed Deposits / Bonds**: 30% for capital safety.\n3. **Gold / Sovereign Gold Bonds**: 10% inflation hedge.\n4. **Crypto / High-Growth**: 10% maximum for opportunistic gains.`;
+    aiResponse = `Given your **${riskAppetite}** risk profile and ₹${salary.toLocaleString()} base income:\n\n1. **Equity Mutual Funds / Index Funds**: 50% allocation for long-term compound growth.\n2. **Fixed Deposits / Bonds**: 30% for capital safety.\n3. **Gold / Sovereign Gold Bonds**: 10% inflation hedge.\n4. **Crypto / High-Growth**: 10% maximum for opportunistic gains.`;
   } else if (textLower.includes('budget') || textLower.includes('exceed') || textLower.includes('shop')) {
     aiResponse = `⚠️ **Budget Analysis Alert**: Your Shopping and Gourmet Groceries make up over 45% of discretionary spend. Try applying the **24-Hour Purchase Delay Rule** for non-essential buys over ₹2,000.`;
   } else if (textLower.includes('goal') || textLower.includes('house') || textLower.includes('bike')) {
     aiResponse = `🎯 **Goal Strategy**: You have active financial goals including Apartment Down Payment and Emergency Fund. Allocating an extra ₹8,000 monthly to high-yield SIPs will shorten your goal deadline by 6 months!`;
   } else {
-    aiResponse = `I have analyzed your financial metrics, ${user.name}. You currently have net monthly savings of ₹${savings.toLocaleString()}. Your debt-to-income ratio is healthy, and your investment portfolio shows solid returns.\n\nWhat specific area of your finances would you like me to optimize today?`;
+    aiResponse = `I have analyzed your financial metrics, ${userName}. You currently have net monthly savings of ₹${savings.toLocaleString()}. Your debt-to-income ratio is healthy, and your investment portfolio shows solid returns.\n\nWhat specific area of your finances would you like me to optimize today?`;
   }
 
   res.json({

@@ -7,15 +7,12 @@ function authenticateToken(req, res, next) {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    // For seamless demo experience, default to u_101 if token isn't provided
-    req.user = { id: 'u_101', email: 'alex.morgan@finance.io' };
-    return next();
+    return res.status(401).json({ error: 'Authentication required. Please sign in.' });
   }
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
-      req.user = { id: 'u_101', email: 'alex.morgan@finance.io' };
-      return next();
+      return res.status(403).json({ error: 'Invalid or expired token. Please sign in again.' });
     }
     req.user = user;
     next();

@@ -101,7 +101,7 @@ export const FinancialGoalsPage: React.FC = () => {
                 </div>
                 <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden border border-slate-200">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 transition-all duration-500"
+                    className="h-full rounded-full bg-indigo-600 transition-all duration-500"
                     style={{ width: `${progress}%` }}
                   />
                 </div>

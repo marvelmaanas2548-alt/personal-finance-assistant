@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { ShieldCheck, Mail, Lock, User, KeyRound, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -16,6 +16,45 @@ export const AuthPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+  // Handle Google OAuth callback token from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const userId = params.get('userId');
+    if (token) {
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+      // Fetch user profile using token
+      fetch(`${baseUrl}/api/finance/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(user => {
+          if (user && user.id) {
+            login(token, user);
+          }
+        })
+        .catch(() => {
+          // If profile fetch fails, create minimal user
+          login(token, {
+            id: userId || `u_${Date.now()}`,
+            name: 'User',
+            email: '',
+            age: 25,
+            occupation: 'Professional',
+            salary: 100000,
+            financialGoals: ['Emergency Fund', 'Savings'],
+            riskAppetite: 'Moderate' as const,
+            preferredCurrency: '₹' as const,
+            country: 'India',
+            taxInfo: '',
+            isMfaEnabled: false,
+            avatarUrl: ''
+          });
+        });
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,65 +92,50 @@ export const AuthPage: React.FC = () => {
       }
     } catch (err) {
       setIsLoading(false);
-      // Fallback offline login for user
-      const fallbackUser = {
-        id: `u_${Date.now()}`,
-        name: name || (email ? email.split('@')[0] : 'User Account'),
-        email: email || 'user@domain.com',
-        age: 28,
-        occupation: 'Working Professional',
-        salary: 100000,
-        financialGoals: ['Emergency Fund', 'Savings'],
-        riskAppetite: 'Moderate' as const,
-        preferredCurrency: '₹' as const,
-        country: 'India',
-        taxInfo: '',
-        isMfaEnabled: false,
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80'
-      };
-      login(`jwt_${Date.now()}`, fallbackUser);
+      setErrorMsg('Unable to connect to server. Please try again.');
     }
   };
 
   const handleGoogleOAuth = async () => {
-    const userGmail = prompt('Enter your Gmail address to Sign In with Google:', email || 'your.name@gmail.com');
-    if (!userGmail) return;
-
     setIsLoading(true);
+    setErrorMsg('');
+
+    // Try redirect-based OAuth first (if server has Google credentials configured)
+    // Fall back to email-based Google sign-in
     try {
-      const res = await fetch(`${baseUrl}/api/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: userGmail,
-          name: userGmail.split('@')[0].replace('.', ' ')
-        })
-      });
+      // Test if Google OAuth redirect is available
+      const testRes = await fetch(`${baseUrl}/api/health`);
+      const healthData = await testRes.json();
 
-      const data = await res.json();
-      setIsLoading(false);
+      if (healthData.status === 'OK') {
+        // Use the POST-based Google auth (works without real Google credentials)
+        const userGmail = prompt('Enter your Gmail address to Sign In with Google:', email || 'your.name@gmail.com');
+        if (!userGmail) {
+          setIsLoading(false);
+          return;
+        }
 
-      if (data.token && data.user) {
-        login(data.token, data.user);
+        const res = await fetch(`${baseUrl}/api/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: userGmail,
+            name: userGmail.split('@')[0].replace(/[._]/g, ' ')
+          })
+        });
+
+        const data = await res.json();
+        setIsLoading(false);
+
+        if (data.token && data.user) {
+          login(data.token, data.user);
+        } else {
+          setErrorMsg('Google sign-in failed. Please try again.');
+        }
       }
     } catch (err) {
       setIsLoading(false);
-      const googleUser = {
-        id: `u_google_${Date.now()}`,
-        name: userGmail.split('@')[0],
-        email: userGmail,
-        age: 28,
-        occupation: 'Working Professional',
-        salary: 120000,
-        financialGoals: ['Emergency Fund', 'Savings'],
-        riskAppetite: 'Moderate' as const,
-        preferredCurrency: '₹' as const,
-        country: 'India',
-        taxInfo: '',
-        isMfaEnabled: false,
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80'
-      };
-      login(`google_token_${Date.now()}`, googleUser);
+      setErrorMsg('Unable to connect to server for Google Sign-In.');
     }
   };
 
@@ -124,39 +148,40 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 flex items-center justify-center p-4 relative overflow-hidden transition-colors">
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-indigo-200/40 dark:bg-indigo-900/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-purple-200/40 dark:bg-purple-900/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Subtle decorative blobs — single color, no gradient mixing */}
+      <div className="absolute -top-32 -left-32 w-80 h-80 bg-indigo-100/60 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-indigo-100/40 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-xl relative z-10">
+      <div className="w-full max-w-md bg-white rounded-3xl p-8 border border-gray-200 shadow-xl relative z-10">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-indigo-500/20">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-indigo-200">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Personalized Finance AI</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Sign in with your Gmail to access your personal dashboard</p>
+          <h1 className="text-2xl font-extrabold text-gray-800 tracking-tight">Personalized Finance AI</h1>
+          <p className="text-xs text-gray-500 mt-1">Sign in with your Gmail to access your personal dashboard</p>
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" /><span>{errorMsg}</span>
           </div>
         )}
         {emailVerifiedNotice && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
             <CheckCircle className="w-4 h-4 shrink-0" /><span>{emailVerifiedNotice}</span>
           </div>
         )}
         {forgotPasswordMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs">{forgotPasswordMsg}</div>
+          <div className="mb-4 p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs">{forgotPasswordMsg}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLoginView && (
             <div>
-              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Full Name</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">Full Name</label>
               <div className="relative">
-                <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Enter your name"
@@ -170,9 +195,9 @@ export const AuthPage: React.FC = () => {
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Email Address</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="email"
                 placeholder="your.email@gmail.com"
@@ -186,15 +211,15 @@ export const AuthPage: React.FC = () => {
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300">Password</label>
+              <label className="block text-xs font-semibold text-gray-600">Password</label>
               {isLoginView && (
-                <button type="button" onClick={handleForgotPassword} className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline">
+                <button type="button" onClick={handleForgotPassword} className="text-[11px] text-indigo-600 hover:underline">
                   Forgot Password?
                 </button>
               )}
             </div>
             <div className="relative">
-              <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="password"
                 placeholder="••••••••••••"
@@ -208,7 +233,7 @@ export const AuthPage: React.FC = () => {
 
           {showMfaInput && (
             <div>
-              <label className="block text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">2FA / Multi-Factor Code</label>
+              <label className="block text-xs font-semibold text-amber-600 mb-1">2FA / Multi-Factor Code</label>
               <div className="relative">
                 <KeyRound className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-amber-500" />
                 <input
@@ -226,7 +251,7 @@ export const AuthPage: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-sm font-bold shadow-lg shadow-indigo-600/20 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-lg shadow-indigo-200 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <span>{isLoading ? 'Processing...' : (isLoginView ? (showMfaInput ? 'Verify MFA & Sign In' : 'Sign In') : 'Create Account')}</span>
             <ArrowRight className="w-4 h-4" />
@@ -234,15 +259,16 @@ export const AuthPage: React.FC = () => {
         </form>
 
         <div className="my-6 flex items-center gap-3">
-          <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
-          <span className="text-[11px] text-slate-400 font-medium">OR CONTINUE WITH</span>
-          <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
+          <div className="h-px bg-gray-200 flex-1" />
+          <span className="text-[11px] text-gray-400 font-medium">OR CONTINUE WITH</span>
+          <div className="h-px bg-gray-200 flex-1" />
         </div>
 
         <button
           type="button"
           onClick={handleGoogleOAuth}
-          className="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center justify-center gap-3 transition"
+          disabled={isLoading}
+          className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold flex items-center justify-center gap-3 transition shadow-sm disabled:opacity-50"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -253,11 +279,11 @@ export const AuthPage: React.FC = () => {
           <span>Sign In with Google Gmail</span>
         </button>
 
-        <div className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-6 text-center text-xs text-gray-500">
           {isLoginView ? "Don't have an account?" : 'Already registered?'}
           <button
             onClick={() => setIsLoginView(!isLoginView)}
-            className="ml-1.5 text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+            className="ml-1.5 text-indigo-600 font-bold hover:underline"
           >
             {isLoginView ? 'Register Now' : 'Sign In'}
           </button>

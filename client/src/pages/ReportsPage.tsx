@@ -66,7 +66,7 @@ export const ReportsPage: React.FC = () => {
       </div>
 
       {/* Export Action Buttons */}
-      <div className="glass-panel p-6 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 bg-gradient-to-r from-indigo-50 via-white to-purple-50">
+      <div className="glass-panel p-6 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 bg-indigo-50 border-indigo-100">
         <div>
           <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
             Export {reportType.toUpperCase()} Financial Statement

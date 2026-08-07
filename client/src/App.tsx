@@ -82,7 +82,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-[#0b0f19] text-slate-900 dark:text-slate-100 antialiased selection:bg-indigo-500 selection:text-white transition-colors duration-300">
+    <div className="flex min-h-screen bg-gray-50 text-gray-900 antialiased selection:bg-indigo-500 selection:text-white">
       {/* Sidebar with Mobile Drawer */}
       <Sidebar
         activeView={activeView}

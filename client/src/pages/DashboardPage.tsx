@@ -35,19 +35,19 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setActiveView, onO
   return (
     <div className="space-y-6">
       {/* Welcome Hero Banner */}
-      <div className="bg-gradient-to-r from-indigo-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40 border border-indigo-100 dark:border-slate-800 p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors">
+      <div className="bg-indigo-50 border border-indigo-100 p-6 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-indigo-600 text-xs font-semibold uppercase tracking-wider mb-1">
             <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" /> AI Personal Finance Buddy
           </div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Welcome back, {user?.name || 'Alex'}!</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
-            You're currently saving <span className="text-emerald-600 dark:text-emerald-400 font-bold">{savingsRate}%</span> of your income. Segment Profile: <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{user?.occupation || 'Working Professional'}</span>.
+          <h2 className="text-2xl font-bold text-gray-800">Welcome back, {user?.name || 'User'}!</h2>
+          <p className="text-xs text-gray-500 mt-1 max-w-xl">
+            You're currently saving <span className="text-emerald-600 font-bold">{savingsRate}%</span> of your income. Segment Profile: <span className="text-indigo-600 font-semibold">{user?.occupation || 'Working Professional'}</span>.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={onOpenIncomeModal} className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/15 transition flex items-center gap-2"><PlusCircle className="w-4 h-4" /> Add Income</button>
-          <button onClick={onOpenExpenseModal} className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-md shadow-rose-600/15 transition flex items-center gap-2"><Plus className="w-4 h-4" /> Record Expense</button>
+          <button onClick={onOpenIncomeModal} className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-200 transition flex items-center gap-2"><PlusCircle className="w-4 h-4" /> Add Income</button>
+          <button onClick={onOpenExpenseModal} className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-md shadow-rose-200 transition flex items-center gap-2"><Plus className="w-4 h-4" /> Record Expense</button>
         </div>
       </div>
 
@@ -55,23 +55,23 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setActiveView, onO
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div onClick={() => setActiveView('income')} className="glass-card p-5 rounded-2xl cursor-pointer">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Monthly Income</span>
-            <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400"><TrendingUp className="w-4 h-4" /></div>
+            <span className="text-xs font-medium text-gray-500">Monthly Income</span>
+            <div className="p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600"><TrendingUp className="w-4 h-4" /></div>
           </div>
-          <div className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">{formatCurrency(totalIncome, currency)}</div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2">
+          <div className="text-2xl font-extrabold text-gray-800">{formatCurrency(totalIncome, currency)}</div>
+          <div className="flex items-center justify-between text-[11px] text-gray-400 mt-2">
             <span>Annualized: {formatCurrency(totalIncome * 12, currency)}</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5">+12.4% <ArrowUpRight className="w-3 h-3" /></span>
+            <span className="text-emerald-600 font-semibold flex items-center gap-0.5">+12.4% <ArrowUpRight className="w-3 h-3" /></span>
           </div>
         </div>
 
         <div onClick={() => setActiveView('expenses')} className="glass-card p-5 rounded-2xl cursor-pointer">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Monthly Expenses</span>
-            <div className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-500 dark:text-rose-400"><TrendingDown className="w-4 h-4" /></div>
+            <span className="text-xs font-medium text-gray-500">Monthly Expenses</span>
+            <div className="p-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-500"><TrendingDown className="w-4 h-4" /></div>
           </div>
-          <div className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">{formatCurrency(totalExpense, currency)}</div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2">
+          <div className="text-2xl font-extrabold text-gray-800">{formatCurrency(totalExpense, currency)}</div>
+          <div className="flex items-center justify-between text-[11px] text-gray-400 mt-2">
             <span>14 Categories tracked</span>
             <span className="text-rose-500 font-semibold">{expenses.length} Records</span>
           </div>
@@ -79,25 +79,25 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setActiveView, onO
 
         <div onClick={() => setActiveView('savings')} className="glass-card p-5 rounded-2xl cursor-pointer">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Net Savings</span>
-            <div className="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400"><PiggyBank className="w-4 h-4" /></div>
+            <span className="text-xs font-medium text-gray-500">Net Savings</span>
+            <div className="p-2 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-600"><PiggyBank className="w-4 h-4" /></div>
           </div>
-          <div className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">{formatCurrency(totalSavings, currency)}</div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2">
+          <div className="text-2xl font-extrabold text-indigo-600">{formatCurrency(totalSavings, currency)}</div>
+          <div className="flex items-center justify-between text-[11px] text-gray-400 mt-2">
             <span>Savings Rate</span>
-            <span className="text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-950 px-2 py-0.5 rounded-full border border-indigo-200 dark:border-indigo-800">{savingsRate}%</span>
+            <span className="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">{savingsRate}%</span>
           </div>
         </div>
 
         <div onClick={() => setActiveView('investments')} className="glass-card p-5 rounded-2xl cursor-pointer">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Investments Portfolio</span>
-            <div className="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400"><LineChart className="w-4 h-4" /></div>
+            <span className="text-xs font-medium text-gray-500">Investments Portfolio</span>
+            <div className="p-2 rounded-xl bg-purple-50 border border-purple-200 text-purple-600"><LineChart className="w-4 h-4" /></div>
           </div>
-          <div className="text-2xl font-extrabold text-purple-700 dark:text-purple-400">{formatCurrency(totalInvestmentValue, currency)}</div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2">
+          <div className="text-2xl font-extrabold text-purple-700">{formatCurrency(totalInvestmentValue, currency)}</div>
+          <div className="flex items-center justify-between text-[11px] text-gray-400 mt-2">
             <span>7 Asset classes</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">+18.5% Returns</span>
+            <span className="text-emerald-600 font-semibold">+18.5% Returns</span>
           </div>
         </div>
       </div>
@@ -107,10 +107,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setActiveView, onO
         <div className="lg:col-span-2 glass-panel p-6 rounded-3xl">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Financial Cash Flow Trend</h3>
-              <p className="text-xs text-slate-400">Income vs Expenses over time (Financial Forecasting)</p>
+              <h3 className="text-base font-bold text-gray-800">Financial Cash Flow Trend</h3>
+              <p className="text-xs text-gray-400">Income vs Expenses over time (Financial Forecasting)</p>
             </div>
-            <button onClick={() => setActiveView('analytics')} className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-semibold flex items-center gap-1">Full Analytics →</button>
+            <button onClick={() => setActiveView('analytics')} className="text-xs text-indigo-600 hover:underline font-semibold flex items-center gap-1">Full Analytics →</button>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -120,7 +120,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setActiveView, onO
                   <linearGradient id="colorExp" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} /><stop offset="95%" stopColor="#f43f5e" stopOpacity={0} /></linearGradient>
                 </defs>
                 <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} /><YAxis stroke="#94a3b8" fontSize={11} tickFormatter={val => `${val / 1000}k`} />
-                <Tooltip contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} formatter={(val: any) => [`${currency}${val.toLocaleString()}`, '']} />
+                <Tooltip contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }} formatter={(val: any) => [`${currency}${val.toLocaleString()}`, '']} />
                 <Area type="monotone" dataKey="Income" stroke="#10b981" fillOpacity={1} fill="url(#colorInc)" strokeWidth={2} />
                 <Area type="monotone" dataKey="Expenses" stroke="#f43f5e" fillOpacity={1} fill="url(#colorExp)" strokeWidth={2} />
               </AreaChart>
@@ -131,26 +131,26 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setActiveView, onO
         <div className="space-y-6">
           <div className="glass-panel p-5 rounded-3xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-500" /> Budget Alerts</h3>
-              <button onClick={() => setActiveView('budget')} className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline">Manage</button>
+              <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-500" /> Budget Alerts</h3>
+              <button onClick={() => setActiveView('budget')} className="text-[11px] text-indigo-600 hover:underline">Manage</button>
             </div>
             {budgetAlerts.length === 0 ? (
-              <p className="text-xs text-slate-400 py-2">All budgets are well within limits!</p>
+              <p className="text-xs text-gray-400 py-2">All budgets are well within limits!</p>
             ) : (
               <div className="space-y-3">
                 {budgetAlerts.slice(0, 3).map(b => {
                   const spent = expenses.filter(e => e.category === b.category).reduce((sum, e) => sum + Number(e.amount), 0);
                   const pct = Math.round((spent / b.limitAmount) * 100);
                   return (
-                    <div key={b.id} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                    <div key={b.id} className="p-3 rounded-xl bg-gray-50 border border-gray-200">
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">{b.category}</span>
+                        <span className="font-semibold text-gray-700">{b.category}</span>
                         <span className={pct >= 100 ? 'text-rose-600 font-bold' : 'text-amber-600 font-bold'}>{pct}% Used</span>
                       </div>
-                      <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
                         <div className={`h-full rounded-full ${pct >= 100 ? 'bg-rose-500' : 'bg-amber-500'}`} style={{ width: `${Math.min(100, pct)}%` }} />
                       </div>
-                      <div className="flex justify-between text-[10px] text-slate-400 mt-1.5">
+                      <div className="flex justify-between text-[10px] text-gray-400 mt-1.5">
                         <span>Spent: {formatCurrency(spent, currency)}</span>
                         <span>Limit: {formatCurrency(b.limitAmount, currency)}</span>
                       </div>
@@ -163,16 +163,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ setActiveView, onO
 
           <div className="glass-panel p-5 rounded-3xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"><CalendarCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Pending Bills</h3>
-              <button onClick={() => setActiveView('bills')} className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline">View All ({pendingBills.length})</button>
+              <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2"><CalendarCheck className="w-4 h-4 text-indigo-600" /> Pending Bills</h3>
+              <button onClick={() => setActiveView('bills')} className="text-[11px] text-indigo-600 hover:underline">View All ({pendingBills.length})</button>
             </div>
             <div className="space-y-2.5">
               {pendingBills.slice(0, 3).map(b => (
-                <div key={b.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                  <div><div className="text-xs font-semibold text-slate-700 dark:text-slate-300">{b.title}</div><div className="text-[10px] text-slate-400">Due: {b.dueDate}</div></div>
+                <div key={b.id} className="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-200">
+                  <div><div className="text-xs font-semibold text-gray-700">{b.title}</div><div className="text-[10px] text-gray-400">Due: {b.dueDate}</div></div>
                   <div className="text-right">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{formatCurrency(b.amount, currency)}</div>
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 font-semibold">Unpaid</span>
+                    <div className="text-xs font-bold text-gray-800">{formatCurrency(b.amount, currency)}</div>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-200 font-semibold">Unpaid</span>
                   </div>
                 </div>
               ))}
