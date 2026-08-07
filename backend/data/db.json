@@ -1,77 +1,11 @@
 {
-  "users": [
-    {
-      "id": "u_101",
-      "name": "Alex Morgan",
-      "email": "alex.morgan@finance.io",
-      "passwordHash": "demo_hashed_pass",
-      "age": 29,
-      "occupation": "Senior Software Engineer",
-      "salary": 145000,
-      "financialGoals": ["Buy House", "Emergency Fund", "Retirement"],
-      "riskAppetite": "Moderate",
-      "preferredCurrency": "₹",
-      "country": "India",
-      "taxInfo": "PAN: ABCDE1234F",
-      "isMfaEnabled": false,
-      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80"
-    }
-  ],
-  "incomes": [
-    { "id": "inc_1", "userId": "u_101", "category": "Salary", "amount": 145000, "source": "Tech Corp Salary", "date": "2026-08-01", "notes": "Monthly Base Salary" },
-    { "id": "inc_2", "userId": "u_101", "category": "Freelance", "amount": 35000, "source": "UI/UX Design Client", "date": "2026-08-03", "notes": "Mobile App UI Contract" },
-    { "id": "inc_3", "userId": "u_101", "category": "Investments", "amount": 12500, "source": "Dividend Payout", "date": "2026-08-05", "notes": "Quarterly Mutual Fund Dividend" },
-    { "id": "inc_4", "userId": "u_101", "category": "Rental", "amount": 22000, "source": "Apartment Rental", "date": "2026-08-02", "notes": "Tenant Monthly Rent" }
-  ],
-  "expenses": [
-    { "id": "exp_1", "userId": "u_101", "category": "Food", "amount": 7500, "title": "Gourmet Groceries & Dining", "date": "2026-08-02", "notes": "Weekly grocery supermarket" },
-    { "id": "exp_2", "userId": "u_101", "category": "EMI", "amount": 18500, "title": "Car Loan Monthly EMI", "date": "2026-08-04", "notes": "HDFC Auto Loan" },
-    { "id": "exp_3", "userId": "u_101", "category": "Fuel", "amount": 4200, "title": "Petrol & Parking", "date": "2026-08-05", "notes": "Fuel tank fill" },
-    { "id": "exp_4", "userId": "u_101", "category": "Electricity", "amount": 3100, "title": "Power Utility Bill", "date": "2026-08-01", "notes": "Summer electricity usage" },
-    { "id": "exp_5", "userId": "u_101", "category": "Shopping", "amount": 9200, "title": "Electronics & Wearables", "date": "2026-08-06", "notes": "Wireless Earbuds" },
-    { "id": "exp_6", "userId": "u_101", "category": "Internet", "amount": 1499, "title": "Fiber Broadband Unlimited", "date": "2026-08-02", "notes": "1 Gbps Plan" },
-    { "id": "exp_7", "userId": "u_101", "category": "Mobile Recharge", "amount": 899, "title": "5G Postpaid Plan", "date": "2026-08-03", "notes": "Primary phone" },
-    { "id": "exp_8", "userId": "u_101", "category": "Insurance", "amount": 5500, "title": "Term Life & Health Insurance", "date": "2026-08-01", "notes": "Monthly premium" },
-    { "id": "exp_9", "userId": "u_101", "category": "Entertainment", "amount": 2400, "title": "Streaming Subscriptions & Cinema", "date": "2026-08-05", "notes": "Netflix, Spotify & Movies" },
-    { "id": "exp_10", "userId": "u_101", "category": "Travel", "amount": 3800, "title": "Weekend Gateway Cab Rides", "date": "2026-08-06", "notes": "Uber & Toll charges" }
-  ],
-  "budgets": [
-    { "id": "bgt_1", "userId": "u_101", "category": "Food", "limitAmount": 10000 },
-    { "id": "bgt_2", "userId": "u_101", "category": "Shopping", "limitAmount": 10000 },
-    { "id": "bgt_3", "userId": "u_101", "category": "Fuel", "limitAmount": 5000 },
-    { "id": "bgt_4", "userId": "u_101", "category": "Entertainment", "limitAmount": 3000 },
-    { "id": "bgt_5", "userId": "u_101", "category": "EMI", "limitAmount": 20000 },
-    { "id": "bgt_6", "userId": "u_101", "category": "Travel", "limitAmount": 6000 }
-  ],
-  "goals": [
-    { "id": "goal_1", "userId": "u_101", "title": "Emergency Fund (6 Months)", "category": "Emergency Fund", "targetAmount": 500000, "currentAmount": 380000, "deadline": "2026-12-31" },
-    { "id": "goal_2", "userId": "u_101", "title": "Apartment Down Payment", "category": "Buy House", "targetAmount": 1500000, "currentAmount": 620000, "deadline": "2028-06-30" },
-    { "id": "goal_3", "userId": "u_101", "title": "Adventure Electric Bike", "category": "Buy Bike", "targetAmount": 180000, "currentAmount": 145000, "deadline": "2026-10-15" },
-    { "id": "goal_4", "userId": "u_101", "title": "Europe Summer Tour", "category": "Vacation", "targetAmount": 250000, "currentAmount": 95000, "deadline": "2027-05-20" }
-  ],
-  "investments": [
-    { "id": "inv_1", "userId": "u_101", "name": "Nifty 50 Index Fund", "type": "Mutual Funds", "amountInvested": 250000, "currentValue": 310000, "purchaseDate": "2024-01-15" },
-    { "id": "inv_2", "userId": "u_101", "name": "Bluechip Tech Stocks (TCS/Infosys)", "type": "Stocks", "amountInvested": 180000, "currentValue": 225000, "purchaseDate": "2024-05-10" },
-    { "id": "inv_3", "userId": "u_101", "name": "Monthly Equity SIP", "type": "SIPs", "amountInvested": 120000, "currentValue": 142000, "purchaseDate": "2025-02-01" },
-    { "id": "inv_4", "userId": "u_101", "name": "High Yield Bank FD", "type": "Fixed Deposits", "amountInvested": 100000, "currentValue": 107500, "purchaseDate": "2025-08-01" },
-    { "id": "inv_5", "userId": "u_101", "name": "Sovereign Gold Bonds (SGB)", "type": "Gold", "amountInvested": 90000, "currentValue": 118000, "purchaseDate": "2023-11-20" },
-    { "id": "inv_6", "userId": "u_101", "name": "Bitcoin & Ethereum Portfolio", "type": "Cryptocurrency", "amountInvested": 50000, "currentValue": 68000, "purchaseDate": "2024-09-12" }
-  ],
-  "loans": [
-    { "id": "loan_1", "userId": "u_101", "name": "EV Car Loan", "type": "Car Loan", "totalAmount": 800000, "outstandingAmount": 420000, "interestRate": 8.5, "emiAmount": 18500, "dueDate": "4th of month", "remainingMonths": 24 },
-    { "id": "loan_2", "userId": "u_101", "name": "Higher Education Loan", "type": "Education Loan", "totalAmount": 500000, "outstandingAmount": 110000, "interestRate": 6.8, "emiAmount": 12000, "dueDate": "15th of month", "remainingMonths": 10 }
-  ],
-  "bills": [
-    { "id": "bill_1", "userId": "u_101", "title": "Electricity Bill", "category": "Electricity", "amount": 3100, "dueDate": "2026-08-10", "isPaid": true, "isAutoPay": true },
-    { "id": "bill_2", "userId": "u_101", "title": "Apartment Rent", "category": "Rent", "amount": 25000, "dueDate": "2026-08-15", "isPaid": false, "isAutoPay": false },
-    { "id": "bill_3", "userId": "u_101", "title": "HDFC Credit Card Bill", "category": "Credit Card", "amount": 14200, "dueDate": "2026-08-12", "isPaid": false, "isAutoPay": false },
-    { "id": "bill_4", "userId": "u_101", "title": "Car EMI Payment", "category": "Loan EMI", "amount": 18500, "dueDate": "2026-08-18", "isPaid": false, "isAutoPay": true },
-    { "id": "bill_5", "userId": "u_101", "title": "Act Fiber Broadband", "category": "Internet", "amount": 1499, "dueDate": "2026-08-22", "isPaid": false, "isAutoPay": true }
-  ],
-  "notifications": [
-    { "id": "notif_1", "userId": "u_101", "type": "budget_alert", "title": "Shopping Budget Alert (92% Used)", "message": "You have spent ₹9,200 of your ₹10,000 budget for Shopping.", "date": "2026-08-06 14:20", "read": false, "severity": "warning" },
-    { "id": "notif_2", "userId": "u_101", "type": "bill_due", "title": "Credit Card Bill Due Soon", "message": "₹14,200 due on Aug 12th for HDFC Credit Card.", "date": "2026-08-07 09:00", "read": false, "severity": "danger" },
-    { "id": "notif_3", "userId": "u_101", "type": "savings_milestone", "title": "Savings Milestone Achieved!", "message": "Awesome! You hit a 60%+ savings rate for August.", "date": "2026-08-05 18:30", "read": true, "severity": "success" },
-    { "id": "notif_4", "userId": "u_101", "type": "investment_update", "title": "Portfolio Up +18.4%", "message": "Your Mutual Funds & Gold SGB investments gained ₹85,000 this quarter.", "date": "2026-08-04 11:15", "read": true, "severity": "info" }
-  ]
+  "users": [],
+  "incomes": [],
+  "expenses": [],
+  "budgets": [],
+  "goals": [],
+  "investments": [],
+  "loans": [],
+  "bills": [],
+  "notifications": []
 }

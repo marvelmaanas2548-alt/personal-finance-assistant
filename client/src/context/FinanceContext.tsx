@@ -141,42 +141,42 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const [incomes, setIncomes] = useState<IncomeItem[]>(() => {
     const saved = localStorage.getItem('fin_incomes');
-    return saved ? JSON.parse(saved) : DEFAULT_INCOMES;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [expenses, setExpenses] = useState<ExpenseItem[]>(() => {
     const saved = localStorage.getItem('fin_expenses');
-    return saved ? JSON.parse(saved) : DEFAULT_EXPENSES;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [budgets, setBudgets] = useState<BudgetItem[]>(() => {
     const saved = localStorage.getItem('fin_budgets');
-    return saved ? JSON.parse(saved) : DEFAULT_BUDGETS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [goals, setGoals] = useState<FinancialGoal[]>(() => {
     const saved = localStorage.getItem('fin_goals');
-    return saved ? JSON.parse(saved) : DEFAULT_GOALS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [investments, setInvestments] = useState<InvestmentItem[]>(() => {
     const saved = localStorage.getItem('fin_investments');
-    return saved ? JSON.parse(saved) : DEFAULT_INVESTMENTS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [loans, setLoans] = useState<LoanItem[]>(() => {
     const saved = localStorage.getItem('fin_loans');
-    return saved ? JSON.parse(saved) : DEFAULT_LOANS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [bills, setBills] = useState<BillItem[]>(() => {
     const saved = localStorage.getItem('fin_bills');
-    return saved ? JSON.parse(saved) : DEFAULT_BILLS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
     const saved = localStorage.getItem('fin_notifications');
-    return saved ? JSON.parse(saved) : DEFAULT_NOTIFICATIONS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Sync to localStorage

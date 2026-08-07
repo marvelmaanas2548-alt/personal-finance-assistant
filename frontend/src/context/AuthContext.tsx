@@ -12,32 +12,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const DEMO_USER: UserProfile = {
-  id: 'u_101',
-  name: 'Alex Morgan',
-  email: 'alex.morgan@finance.io',
-  age: 29,
-  occupation: 'Senior Software Engineer',
-  salary: 145000,
-  financialGoals: ['Buy House', 'Emergency Fund', 'Retirement'],
-  riskAppetite: 'Moderate',
-  preferredCurrency: '₹',
-  country: 'India',
-  taxInfo: 'PAN: ABCDE1234F',
-  isMfaEnabled: false,
-  avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80'
-};
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token') || 'demo_token_123');
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
   const [user, setUser] = useState<UserProfile | null>(() => {
     const saved = localStorage.getItem('user_profile');
-    return saved ? JSON.parse(saved) : DEMO_USER;
+    return saved ? JSON.parse(saved) : null;
   });
 
   useEffect(() => {
     if (user) {
       localStorage.setItem('user_profile', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user_profile');
     }
   }, [user]);
 
@@ -53,6 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user_profile');
+    localStorage.clear();
   };
 
   const updateUser = (updated: Partial<UserProfile>) => {
@@ -60,6 +47,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newUser = { ...user, ...updated };
       setUser(newUser);
       localStorage.setItem('user_profile', JSON.stringify(newUser));
+
+      // Sync updated profile to backend
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      fetch(`${baseUrl}/api/finance/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(updated)
+      }).catch(() => {});
     }
   };
 
@@ -68,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         token,
         user,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user && !!token,
         login,
         logout,
         updateUser
