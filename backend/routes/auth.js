@@ -212,11 +212,28 @@ router.post('/toggle-mfa', authenticateToken, async (req, res) => {
   });
 });
 
-// ============ GET ALL USERS (admin) ============
-router.get('/users', async (req, res) => {
-  const db = getDb();
-  const users = await db.all('SELECT id, name, email, authProvider, createdAt FROM users');
-  return res.json({ users, count: users.length });
+// ============ GET CURRENT USER (/me) ============
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const db = getDb();
+    const user = await db.get('SELECT * FROM users WHERE id = ?', [req.user.id]);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const { passwordHash: _, ...safeUser } = user;
+    safeUser.financialGoals = JSON.parse(safeUser.financialGoals || '[]');
+    safeUser.isMfaEnabled = !!safeUser.isMfaEnabled;
+    return res.json({ user: safeUser });
+  } catch (err) {
+    console.error('Fetch me error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// ============ USER LOGOUT ============
+router.post('/logout', (req, res) => {
+  return res.json({ message: 'Successfully logged out' });
 });
 
 module.exports = router;
+
