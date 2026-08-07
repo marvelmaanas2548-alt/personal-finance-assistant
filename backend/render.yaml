@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: personalized-finance-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: JWT_SECRET
+        generateValue: true
