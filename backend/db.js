@@ -1,14 +1,20 @@
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const path = require('path');
+const fs = require('fs');
 
 let db = null;
 
 async function initDatabase() {
   if (db) return db;
 
+  const dataDir = path.join(__dirname, 'data');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+
   db = await open({
-    filename: path.join(__dirname, 'data', 'database.sqlite'),
+    filename: path.join(dataDir, 'database.sqlite'),
     driver: sqlite3.Database
   });
 

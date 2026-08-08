@@ -112,11 +112,11 @@ async function startServer() {
   try {
     await initDatabase();
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log('');
       console.log('╔════════════════════════════════════════════════════════════╗');
       console.log('║   Personalized Finance Backend API Server v2.0            ║');
-      console.log(`║   Running on: http://localhost:${PORT}                       ║`);
+      console.log(`║   Running on: http://0.0.0.0:${PORT}                       ║`);
       console.log('║   Database:   SQLite (data/database.sqlite)               ║');
       console.log('║   Auth:       JWT + Google OAuth + bcrypt + Passport      ║');
       console.log('║   Bank Sync:  Open Banking + CIBIL Score & EMI Engine     ║');
