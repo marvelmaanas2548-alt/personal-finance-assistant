@@ -12,6 +12,7 @@ const authRoutes = require('./routes/auth');
 const financeRoutes = require('./routes/finance');
 const aiAdvisorRoutes = require('./routes/aiAdvisor');
 const bankRoutes = require('./routes/bank');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -49,6 +50,7 @@ app.use('/auth', authRoutes);  // Also mount at /auth for Google OAuth redirect 
 app.use('/api/finance', financeRoutes);
 app.use('/api/ai', aiAdvisorRoutes);
 app.use('/api/bank', bankRoutes);
+app.use('/api/admin/db', adminRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

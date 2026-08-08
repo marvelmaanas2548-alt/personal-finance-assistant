@@ -25,7 +25,7 @@ router.put('/profile', authenticateToken, (req, res) => {
   const db = getDb();
   let userIndex = db.users.findIndex(u => u.id === req.user.id);
   if (userIndex === -1) userIndex = 0;
-  
+
   db.users[userIndex] = { ...db.users[userIndex], ...req.body };
   saveDb(db);
   res.json(db.users[userIndex]);
@@ -106,7 +106,7 @@ router.post('/expenses', authenticateToken, (req, res) => {
     const totalSpent = db.expenses
       .filter(e => e.category === newItem.category)
       .reduce((sum, e) => sum + Number(e.amount), 0);
-    
+
     const percentage = (totalSpent / bgt.limitAmount) * 100;
     if (percentage >= 100) {
       db.notifications.unshift({
@@ -253,7 +253,7 @@ router.post('/loans/:id/pay-emi', authenticateToken, (req, res) => {
     const loan = db.loans[index];
     loan.outstandingAmount = Math.max(0, loan.outstandingAmount - loan.emiAmount);
     if (loan.remainingMonths > 0) loan.remainingMonths -= 1;
-    
+
     // Add loan payment expense
     db.expenses.unshift({
       id: `exp_${Date.now()}`,
@@ -286,7 +286,7 @@ router.put('/bills/:id/pay', authenticateToken, (req, res) => {
   if (index !== -1) {
     const bill = db.bills[index];
     bill.isPaid = true;
-    
+
     // Add expense record
     db.expenses.unshift({
       id: `exp_${Date.now()}`,
